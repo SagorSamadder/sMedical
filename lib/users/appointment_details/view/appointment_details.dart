@@ -7,153 +7,205 @@ class Appointmentdetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final status = (doc['status'] ?? 'unknown').toString();
+    final isCompleted = status.toLowerCase() == "complete";
+    final reviewPending = (doc['review'] ?? "false").toString() == "false";
+
     return Scaffold(
+      backgroundColor: const Color(0xffF4F6FB),
       appBar: AppBar(
-        backgroundColor: AppColors.whiteColor,
-        title: "Appointment Details".text.make(),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: "Appointment Details"
+            .text
+            .color(AppColors.primeryColor)
+            .semiBold
+            .make(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(12),
         child: Column(
           children: [
             Container(
               width: context.screenWidth,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: AppColors.bgDarkColor,
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: .06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
                   Container(
+                    height: 76,
+                    width: 76,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.bgDarkColor,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    height: 75,
-                    width: 75,
-                    child: Image.asset(
-                      AppAssets.imgLogin,
-                      fit: BoxFit.cover,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        AppAssets.imgLogin,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                  15.widthBox,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      "Doctor name"
-                          .text
-                          .size(AppFontSize.size18)
-                          .semiBold
-                          .make(),
-                      doc['appDocName']
-                          .toString()
-                          .text
-                          .size(AppFontSize.size16)
-                          .make(),
-                      doc['appDocNum']
-                          .toString()
-                          .text
-                          .size(AppFontSize.size12)
-                          .make(),
-                    ],
+                  12.widthBox,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        "Doctor"
+                            .text
+                            .size(AppFontSize.size12)
+                            .color(Colors.black54)
+                            .make(),
+                        Text(
+                          doc['appDocName'].toString(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: AppFontSize.size18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        2.heightBox,
+                        doc['appDocNum']
+                            .toString()
+                            .text
+                            .size(AppFontSize.size12)
+                            .color(Colors.black54)
+                            .make(),
+                      ],
+                    ),
                   ),
-                  const Spacer(),
                   Container(
-                    width: 60,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(12),
                       color: AppColors.primeryColor,
                     ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.phone,
-                        color: Colors.white,
-                      ),
+                    child: const Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                      size: 20,
                     ),
                   ),
                 ],
               ),
             ),
-            10.heightBox,
+            12.heightBox,
             Container(
               width: context.screenWidth,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: AppColors.bgDarkColor,
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: .06),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _labelValue('Appointment Day', doc['appDay'].toString()),
                   10.heightBox,
-                  "Appointment day".text.semiBold.make(),
-                  doc['appDay'].toString().text.make(),
+                  _labelValue('Appointment Time', doc['appTime'].toString()),
                   10.heightBox,
-                  "Appointment time".text.semiBold.make(),
-                  doc['appTime'].toString().text.make(),
+                  _labelValue("Patient's Name", doc['appName'].toString()),
                   10.heightBox,
-                  "patient's name".text.semiBold.make(),
-                  doc['appName'].toString().text.make(),
+                  _labelValue("Patient's Phone", doc['appMobile'].toString()),
                   10.heightBox,
-                  "patient's phone".text.semiBold.make(),
-                  doc['appMobile'].toString().text.make(),
-                  10.heightBox,
-                  "Problems".text.semiBold.make(),
-                  doc['appMsg'].toString().text.make(),
-                  30.heightBox,
-                  "Status".text.semiBold.make(),
-                  doc['status'].toString().text.make(),
-                  40.heightBox,
-                  doc['status'] == "complete"
-                      ? Align(
-                          alignment: Alignment.center,
-                          child: doc['review'] == "false"
-                              ? InkWell(
-                                  onTap: () {
-                                    Get.to(
-                                      () => ReviewPage(
-                                        docId: doc['appWith'],
-                                        documetId: doc.id,
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primeryColor,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Give a Review",
-                                        style: TextStyle(
-                                          color: AppColors.whiteColor,
-                                        ),
-                                      ),
-                                    ),
+                  _labelValue('Problems', doc['appMsg'].toString()),
+                  18.heightBox,
+                  Row(
+                    children: [
+                      const Text(
+                        'Status',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _statusColor(status).withValues(alpha: .14),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          status,
+                          style: TextStyle(
+                            color: _statusColor(status),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  24.heightBox,
+                  if (isCompleted)
+                    Align(
+                      alignment: Alignment.center,
+                      child: reviewPending
+                          ? InkWell(
+                              onTap: () {
+                                Get.to(
+                                  () => ReviewPage(
+                                    docId: doc['appWith'],
+                                    documetId: doc.id,
                                   ),
-                                )
-                              : Container(
-                                  height: 50,
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primeryColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Thanks for Review",
-                                      style: TextStyle(
-                                        color: AppColors.whiteColor,
-                                      ),
-                                    ),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primeryColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  "Give a Review",
+                                  style: TextStyle(
+                                    color: AppColors.whiteColor,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                        )
-                      : Container()
+                              ),
+                            )
+                          : Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primeryColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                "Thanks for Review",
+                                style: TextStyle(
+                                  color: AppColors.whiteColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                    )
                 ],
               ),
             ),
@@ -161,5 +213,33 @@ class Appointmentdetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _labelValue(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          value,
+          style: const TextStyle(color: Colors.black54),
+        ),
+      ],
+    );
+  }
+
+  Color _statusColor(String status) {
+    final lower = status.toLowerCase();
+    if (lower == 'complete') return const Color(0xff219653);
+    if (lower == 'pending') return const Color(0xffE2A300);
+    if (lower == 'cancelled') return const Color(0xffD62828);
+    return const Color(0xff4B2EAD);
   }
 }

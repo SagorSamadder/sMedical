@@ -1,4 +1,3 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../general/consts/consts.dart';
 import '../controller/appointment_details_controller.dart';
 
@@ -28,19 +27,19 @@ class AppointmentDetails extends StatelessWidget {
           backgroundColor: AppColors.whiteColor,
           title: Text(
             "Appointment Details",
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(16.w),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.r),
+                    borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withValues(alpha: 0.2),
@@ -50,7 +49,7 @@ class AppointmentDetails extends StatelessWidget {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.all(16.w),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -79,12 +78,12 @@ class AppointmentDetails extends StatelessWidget {
                         label: "Time",
                         value: appointment['appTime'] ?? 'Unknown time',
                       ),
-                      SizedBox(height: 20.h),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Icon(Icons.info,
-                              color: AppColors.greenColor, size: 24.w),
-                          SizedBox(width: 12.w),
+                              color: AppColors.greenColor, size: 24),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,10 +97,10 @@ class AppointmentDetails extends StatelessWidget {
                                                 controller.selectedStatus.value,
                                             icon: const Icon(
                                                 Icons.arrow_drop_down),
-                                            iconSize: 24.w,
+                                            iconSize: 24,
                                             elevation: 16,
                                             style: TextStyle(
-                                                fontSize: 16.sp,
+                                                fontSize: 16,
                                                 color: Colors.black),
                                             onChanged: controller
                                                     .isDropdownDisabled.value
@@ -126,17 +125,17 @@ class AppointmentDetails extends StatelessWidget {
                                             }).toList(),
                                           )),
                                     ),
-                                    SizedBox(width: 10.w),
+                                    const SizedBox(width: 10),
                                     Expanded(
                                       flex: 1,
                                       child: Obx(() => Container(
-                                            height: 25.h,
+                                            height: 25,
                                             decoration: BoxDecoration(
                                               color: controller.getStatusColor(
                                                   controller
                                                       .selectedStatus.value),
                                               borderRadius:
-                                                  BorderRadius.circular(8.r),
+                                                  BorderRadius.circular(8),
                                             ),
                                             child: Center(
                                               child: Text(
@@ -144,7 +143,7 @@ class AppointmentDetails extends StatelessWidget {
                                                     .toUpperCase(),
                                                 style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 10.sp,
+                                                  fontSize: 10,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -158,26 +157,26 @@ class AppointmentDetails extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20.h),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
-                SizedBox(height: 70.h),
+                const SizedBox(height: 70),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 100.w, vertical: 12.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 100, vertical: 12),
                       backgroundColor: Colors.blue,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: Text(
                       "Contact with patient",
-                      style: TextStyle(fontSize: 13.sp),
+                      style: TextStyle(fontSize: 13),
                     ),
                   ),
                 ),
@@ -192,11 +191,11 @@ class AppointmentDetails extends StatelessWidget {
   Widget _buildDetailRow(
       {required IconData icon, required String label, required String value}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.greenColor, size: 24.w),
-          SizedBox(width: 12.w),
+          Icon(icon, color: AppColors.greenColor, size: 24),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +203,7 @@ class AppointmentDetails extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey[700],
                   ),
@@ -212,7 +211,7 @@ class AppointmentDetails extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 14,
                     color: Colors.black,
                   ),
                 ),

@@ -43,6 +43,13 @@ class CategoryDetailsView extends StatelessWidget {
                 ),
                 itemCount: data.length,
                 itemBuilder: (BuildContext context, index) {
+                  final docData = data[index].data() as Map<String, dynamic>?;
+                  final imageUrl = (docData?['image'] ?? '').toString().trim();
+                  final docName = (docData?['docName'] ?? 'Unknown').toString();
+                  final docRating = double.tryParse(
+                          (docData?['docRating'] ?? '0').toString()) ??
+                      0;
+
                   return Container(
                     decoration: BoxDecoration(
                       color: AppColors.bgDarkColor,
@@ -59,14 +66,14 @@ class CategoryDetailsView extends StatelessWidget {
                           child: Container(
                             width: 130,
                             color: AppColors.greenColor,
-                            child: data[index]['image'] == ''
+                            child: imageUrl.isEmpty
                                 ? Image.asset(
                                     'assets/images/doctor.png',
                                     width: double.infinity,
                                     fit: BoxFit.cover,
                                   )
                                 : Image.network(
-                                    data[index]['image'].toString().trim(),
+                                    imageUrl,
                                     height: 130,
                                     width: 130,
                                     fit: BoxFit.cover,
@@ -87,14 +94,9 @@ class CategoryDetailsView extends StatelessWidget {
                           ),
                         ),
                         const Divider(),
-                        data[index]['docName']
-                            .toString()
-                            .text
-                            .size(AppFontSize.size16)
-                            .make(),
+                        docName.text.size(AppFontSize.size16).make(),
                         RatingBarIndicator(
-                          rating:
-                              double.parse(data[index]['docRating'].toString()),
+                          rating: docRating,
                           itemBuilder: (context, index) => const Icon(
                             Icons.star,
                             color: Colors.amber,

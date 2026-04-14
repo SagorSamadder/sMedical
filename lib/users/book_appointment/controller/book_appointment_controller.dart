@@ -13,7 +13,7 @@ class AppointmentController extends GetxController {
   var finalDate = ''.obs;
   List<DateTime> dates = [];
   RxString selectedTime = ''.obs;
-List<String> timeIntervals = [
+  List<String> timeIntervals = [
     "08:00AM-08:30AM",
     "08:30AM-09:00AM",
     "09:00AM-09:30AM",
@@ -62,7 +62,7 @@ List<String> timeIntervals = [
     "06:30AM-07:00AM",
     "07:00AM-07:30AM",
     "07:30AM-08:00AM",
-];
+  ];
 
   void generateDates() {
     DateTime today = DateTime.now();
@@ -173,7 +173,11 @@ List<String> timeIntervals = [
 
             isLoading(false);
             VxToast.show(context, msg: "Appointment is booked successfully");
-            Get.back();
+            Navigator.pop(context);
+            //clear all fields
+            appNameController.clear();
+            appMobileController.clear();
+            appMessageController.clear();
           } else {
             isLoading(false);
             VxToast.show(context,
