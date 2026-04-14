@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:s_medi/general/consts/colors.dart';
 import 'package:s_medi/general/list/home_icon_list.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:s_medi/general/consts/vx_compat.dart';
 import '../../category_details/view/category_details.dart';
 
 class CategoryScreenn extends StatefulWidget {
