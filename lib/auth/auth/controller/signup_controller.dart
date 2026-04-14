@@ -2,6 +2,8 @@ import 'package:s_medi/general/consts/consts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
+import '../view/login_page.dart';
+
 class SignupController extends GetxController {
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
@@ -123,6 +125,7 @@ class SignupController extends GetxController {
     await FirebaseAuth.instance.signOut();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('currentUserType');
+    Get.offAll(() => const LoginView());
   }
 
   //vlidateemail

@@ -20,64 +20,119 @@ class BookAppointmentView extends StatefulWidget {
 }
 
 class _BookAppointmentViewState extends State<BookAppointmentView> {
-  var controller = Get.put(AppointmentController());
+  final controller = Get.put(AppointmentController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffF4F6FB),
       appBar: AppBar(
-        backgroundColor: AppColors.whiteColor,
-        title: Text("Doctor : ${widget.docName}"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('Book Appointment'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
+      body: Form(
+        key: controller.formkey,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Form(
-            key: controller.formkey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Select Appointment date",
-                  style: TextStyle(fontSize: 18),
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [AppColors.primeryColor, const Color(0xff281B64)],
+                  ),
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                SizedBox(
-                  height: 100,
-                  child: ListView.builder(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Doctor',
+                      style: TextStyle(color: Color(0xCCFFFFFF), fontSize: 13),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.docName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0x1FFFFFFF),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Contact: ${_maskedContact(widget.docNum)}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              _sectionTitle('Select Appointment Date'),
+              const SizedBox(height: 6),
+              SizedBox(
+                height: 98,
+                child: Obx(() {
+                  final selectedDate = controller.selectedDate.value;
+                  return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.dates.length,
                     itemBuilder: (context, index) {
-                      DateTime date = controller.dates[index];
-                      bool isSelected =
-                          date.isAtSameMomentAs(controller.selectedDate.value);
+                      final date = controller.dates[index];
+                      final isSelected = date.isAtSameMomentAs(selectedDate);
                       return GestureDetector(
                         onTap: () {
-                          setState(() {
-                            controller.selectedDate.value = date;
-                            controller.finalDate.value =
-                                DateFormat('yyyy-MM-dd')
-                                    .format(controller.selectedDate.value);
-                            List<String> filteredIntervals =
-                                controller.getFilteredTimeIntervals();
-                            if (filteredIntervals.isNotEmpty) {
-                              controller.selectedTime.value =
-                                  filteredIntervals[0];
-                            }
-                          });
+                          controller.selectedDate.value = date;
+                          controller.finalDate.value =
+                              DateFormat('yyyy-MM-dd').format(date);
+                          final filtered =
+                              controller.getFilteredTimeIntervals();
+                          controller.selectedTime.value =
+                              filtered.isNotEmpty ? filtered.first : '';
                         },
-                        child: Container(
-                          width: 80,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          width: 84,
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 10),
+                            horizontal: 4,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? AppColors.primeryColor
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Colors.grey,
+                              color: isSelected
+                                  ? AppColors.primeryColor
+                                  : Colors.grey.shade300,
                             ),
+                            boxShadow: isSelected
+                                ? const [
+                                    BoxShadow(
+                                      color: Color(0x404B2EAD),
+                                      blurRadius: 10,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ]
+                                : null,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -85,14 +140,17 @@ class _BookAppointmentViewState extends State<BookAppointmentView> {
                               Text(
                                 DateFormat('E').format(date),
                                 style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.white : Colors.black,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Colors.black87,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               Text(
                                 date.day.toString(),
                                 style: TextStyle(
                                   fontSize: 24,
+                                  fontWeight: FontWeight.w700,
                                   color:
                                       isSelected ? Colors.white : Colors.black,
                                 ),
@@ -100,8 +158,9 @@ class _BookAppointmentViewState extends State<BookAppointmentView> {
                               Text(
                                 DateFormat('MMM').format(date),
                                 style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.white : Colors.black,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Colors.black54,
                                 ),
                               ),
                             ],
@@ -109,111 +168,158 @@ class _BookAppointmentViewState extends State<BookAppointmentView> {
                         ),
                       );
                     },
-                  ),
-                ),
-                const Text(
-                  "Select Appointment Time",
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(
-                  height: 70,
-                  child: Obx(
-                    () {
-                      List<String> filteredIntervals =
-                          controller.getFilteredTimeIntervals();
-                      if (filteredIntervals.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            "No time slots available",
-                            style: TextStyle(color: Colors.red),
+                  );
+                }),
+              ),
+              const SizedBox(height: 10),
+              _sectionTitle('Select Appointment Time'),
+              const SizedBox(height: 6),
+              SizedBox(
+                height: 68,
+                child: Obx(() {
+                  final filteredIntervals =
+                      controller.getFilteredTimeIntervals();
+                  if (filteredIntervals.isEmpty) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xffFFF0F0),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xffFFCCCC)),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'No time slots available',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: filteredIntervals.length,
+                    itemBuilder: (context, index) {
+                      final interval = filteredIntervals[index];
+                      final isSelected =
+                          controller.selectedTime.value == interval;
+                      return GestureDetector(
+                        onTap: () {
+                          controller.selectedTime.value = interval;
+                          setState(() {});
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 8,
                           ),
-                        );
-                      }
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: filteredIntervals.length,
-                        itemBuilder: (context, index) {
-                          String interval = filteredIntervals[index];
-                          bool isSelected =
-                              controller.selectedTime.value == interval;
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                controller.selectedTime.value = interval;
-                              });
-                            },
-                            child: Container(
-                              width: 140,
-                              height: 70,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? AppColors.primeryColor
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  interval,
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColors.primeryColor
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppColors.primeryColor
+                                  : Colors.grey.shade300,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              interval,
+                              style: TextStyle(
+                                color:
+                                    isSelected ? Colors.white : Colors.black87,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       );
                     },
+                  );
+                }),
+              ),
+              const SizedBox(height: 8),
+              _sectionTitle('Mobile Number'),
+              const SizedBox(height: 6),
+              CoustomTextField(
+                validator: controller.validdata,
+                textcontroller: controller.appMobileController,
+                hint: 'Enter patient mobile number',
+                icon: const Icon(Icons.call),
+              ),
+              const SizedBox(height: 10),
+              _sectionTitle('Your Problem'),
+              const SizedBox(height: 6),
+              TextFormField(
+                controller: controller.appMessageController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.only(bottom: 55),
+                    child: Icon(Icons.note_alt_outlined),
+                  ),
+                  hintText: 'Write your problem in short',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide:
+                        BorderSide(color: AppColors.primeryColor, width: 1.4),
                   ),
                 ),
-                10.heightBox,
-                "Mobile Number".text.size(AppFontSize.size16).semiBold.make(),
-                CoustomTextField(
-                  validator: controller.validdata,
-                  textcontroller: controller.appMobileController,
-                  hint: "Enter patent mobile number",
-                  icon: const Icon(Icons.call),
-                ),
-                10.heightBox,
-                "Your problem".text.size(AppFontSize.size16).semiBold.make(),
-                TextFormField(
-                  controller: controller.appMessageController,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.note_add),
-                    hintText: "write your problem in short",
-                    hintStyle: TextStyle(),
-                    border: OutlineInputBorder(borderSide: BorderSide()),
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
       bottomNavigationBar: Obx(
-        () => Padding(
-          padding: const EdgeInsets.all(10),
+        () => Container(
+          color: const Color(0xffF4F6FB),
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
           child: controller.isLoading.value
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+              ? const Center(child: CircularProgressIndicator())
               : CoustomButton(
                   onTap: () async {
                     await controller.bookAppointment(
-                        widget.docId, widget.docName, widget.docNum, context);
+                      widget.docId,
+                      widget.docName,
+                      widget.docNum,
+                      context,
+                    );
                   },
-                  title: "Confirm Appointment",
+                  title: 'Confirm Appointment',
                 ),
         ),
       ),
     );
+  }
+
+  Widget _sectionTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        color: AppColors.primeryColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+
+  String _maskedContact(String value) {
+    final clean = value.trim();
+    if (clean.length <= 6) {
+      return clean;
+    }
+    return '${clean.substring(0, 6)}******';
   }
 }

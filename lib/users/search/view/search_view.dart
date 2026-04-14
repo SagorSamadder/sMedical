@@ -44,6 +44,7 @@ class SearchView extends StatelessWidget {
                 itemCount: filteredDocs.length,
                 itemBuilder: (BuildContext context, index) {
                   var doc = filteredDocs[index];
+                  final imageUrl = (doc['image'] ?? '').toString().trim();
                   return GestureDetector(
                     onTap: () {
                       Get.to(
@@ -68,11 +69,33 @@ class SearchView extends StatelessWidget {
                             child: Container(
                               width: 130,
                               color: AppColors.greenColor,
-                              child: Image.asset(
-                                AppAssets.imgLogin,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
+                              child: imageUrl.isEmpty
+                                  ? Image.asset(
+                                      'assets/images/doctor.png',
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      imageUrl,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, progress) {
+                                        if (progress == null) {
+                                          return child;
+                                        }
+                                        return Image.asset(
+                                          'assets/images/doctor.png',
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
+                                      errorBuilder: (_, __, ___) => Image.asset(
+                                        'assets/images/doctor.png',
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                             ),
                           ),
                           const Divider(),
