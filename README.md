@@ -18,6 +18,15 @@ For run this project just clone this project and run this command in your projec
 ```bash
   flutter pub get
 ```
+
+## Cloudinary profile images
+Profile photos now upload to Cloudinary instead of Firebase Storage.
+The app uses public Cloudinary config:
+- cloud name: `dgcetpvd6`
+- upload preset: `smedical_preset`
+- folder: `sMedical`
+
+Profile images are keyed by user uid, so uploading a new profile image replaces the previous one for that user.
     
 ## Support
 

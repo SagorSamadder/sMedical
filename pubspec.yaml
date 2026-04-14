@@ -43,7 +43,6 @@ dependencies:
   intl: ^0.20.2
   flutter_rating_bar: ^4.0.1
   image_picker: ^1.1.2
-  firebase_storage: ^12.3.3
   shimmer: ^3.0.0
   googleapis_auth: ^1.6.0
   jose: ^0.3.4
