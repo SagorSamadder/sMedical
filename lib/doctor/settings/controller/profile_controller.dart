@@ -1,11 +1,31 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../general/service/cloudinary_service.dart';
+
 class ProfileController extends GetxController {
+  void _showUploadError(String message) {
+    if (Get.overlayContext != null) {
+      Get.snackbar('Error', message);
+      return;
+    }
+
+    final context = Get.context;
+    if (context != null) {
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+      return;
+    }
+
+    Get.log(message, isError: true);
+  }
+
   @override
   void onInit() {
     getData = getUserData();
@@ -46,23 +66,24 @@ class ProfileController extends GetxController {
   Future<void> uploadImage(File image) async {
     isLoading(true);
     try {
-      // Upload the image to Firebase Storage
-      String fileName = 'profile_images/${currentUser!.uid}.jpg';
-      UploadTask uploadTask =
-          FirebaseStorage.instance.ref(fileName).putFile(image);
-      TaskSnapshot snapshot = await uploadTask;
-      String downloadUrl = await snapshot.ref.getDownloadURL();
+      debugPrint(
+          '[DoctorProfile] Upload started. uid=${currentUser?.uid} path=${image.path}');
+      final downloadUrl = await CloudinaryService.uploadProfileImage(
+        imageFile: image,
+        userId: currentUser!.uid,
+      );
 
-      // Update the user document with the new image URL
       await FirebaseFirestore.instance
           .collection('doctors')
           .doc(currentUser!.uid)
           .update({'image': downloadUrl});
 
-      profileImageUrl.value =
-          downloadUrl; // Update local variable with new image URL
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to upload image: $e');
+      profileImageUrl.value = downloadUrl;
+      debugPrint('[DoctorProfile] Upload success. imageUrl=$downloadUrl');
+    } catch (e, st) {
+      debugPrint('[DoctorProfile] Upload failed: $e');
+      debugPrint('[DoctorProfile] StackTrace: $st');
+      _showUploadError('Failed to upload image: $e');
     } finally {
       isLoading(false);
     }
