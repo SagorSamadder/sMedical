@@ -1,6 +1,6 @@
 import 'package:s_medi/general/consts/consts.dart';
 
-import '../../home/view/home.dart';
+import '../../home/view/doctor_home.dart';
 import '../../widgets/coustom_textfield.dart';
 import '../../widgets/loading_indicator.dart';
 import '../controller/signup_controller.dart';
@@ -123,7 +123,7 @@ class SignupView extends StatelessWidget {
                           onPressed: () async {
                             await controller.signupUser(context);
                             if (controller.userCredential != null) {
-                              Get.offAll(() => const Home());
+                              Get.offAll(() => const DoctorHome());
                             }
                           },
                           child: controller.isLoading.value

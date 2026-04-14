@@ -7,14 +7,14 @@ import '../../notification/notification_details.dart';
 import '../../settings/view/setting_view.dart';
 import '../../total_appintment/view/total_appointment_view.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class DoctorHome extends StatefulWidget {
+  const DoctorHome({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<DoctorHome> createState() => _DoctorHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _DoctorHomeState extends State<DoctorHome> {
   int selectedIndex = 0;
   List screenList = [
     const TotalAppointment(),

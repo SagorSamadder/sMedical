@@ -1,6 +1,6 @@
 import 'package:s_medi/general/consts/consts.dart';
 
-import '../../home/view/home.dart';
+import '../../home/view/doctor_home.dart';
 
 class LoginController extends GetxController {
   UserCredential? userCredential;
@@ -37,7 +37,7 @@ class LoginController extends GetxController {
             isLoading(false);
             Get.snackbar("Success", "Login Successful",
                 snackPosition: SnackPosition.TOP);
-            Get.offAll(() => const Home());
+            Get.offAll(() => const DoctorHome());
           } else {
             isLoading(false);
             Get.snackbar("Login failed", "You are not a doctor",
