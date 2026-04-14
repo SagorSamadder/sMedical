@@ -1,9 +1,10 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:s_medi/doctor/auth/view/login_page.dart';
+import 'package:s_medi/doctor/widgets/coustom_iconbutton.dart';
 import 'package:s_medi/general/consts/consts.dart';
-import 'package:s_medi/auth/auth/view/login_page.dart';
-import 'package:s_medi/users/widgets/coustom_iconbutton.dart';
 
-import '../../../auth/auth/controller/signup_controller.dart';
+
+import '../../auth/controller/signup_controller.dart';
 import '../controller/profile_controller.dart';
 
 class SettingsView extends StatelessWidget {

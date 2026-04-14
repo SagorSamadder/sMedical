@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:s_medi/firebase_options.dart';
 import 'package:s_medi/general/consts/consts.dart';
 
-import 'users/auth/view/login_page.dart';
+import 'auth/auth/view/login_page.dart';
 import 'users/home/view/home.dart';
 
 void main() async {
