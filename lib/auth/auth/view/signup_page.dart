@@ -1,4 +1,5 @@
 import 'package:s_medi/general/consts/consts.dart';
+import 'package:s_medi/doctor/home/view/doctor_home.dart';
 
 import '../../../users/home/view/home.dart';
 import '../../../users/widgets/coustom_textfield.dart';
@@ -58,6 +59,103 @@ class SignupView extends StatelessWidget {
                           hint: AppString.passwordHint,
                           validator: controller.validpass,
                         ),
+                        15.heightBox,
+                        Obx(
+                          () => DropdownButtonFormField<String>(
+                            initialValue: controller.selectedRole.value,
+                            decoration: const InputDecoration(
+                              labelText: 'Register as',
+                              prefixIcon: Icon(Icons.badge_outlined),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                              ),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'user',
+                                child: Text('User'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'doctor',
+                                child: Text('Doctor'),
+                              ),
+                            ],
+                            onChanged: controller.setRole,
+                          ),
+                        ),
+                        15.heightBox,
+                        Obx(
+                          () => controller.selectedRole.value == 'doctor'
+                              ? Column(
+                                  children: [
+                                    CoustomTextField(
+                                      textcontroller:
+                                          controller.phoneController,
+                                      icon: const Icon(Icons.phone),
+                                      hint: 'Enter your phone number',
+                                      validator: controller.validfield,
+                                    ),
+                                    15.heightBox,
+                                    GestureDetector(
+                                      onTapDown: (details) {
+                                        controller.showDropdownMenu(context);
+                                      },
+                                      child: TextFormField(
+                                        controller:
+                                            controller.categoryController,
+                                        readOnly: true,
+                                        validator: controller.validfield,
+                                        onTap: () {
+                                          controller.showDropdownMenu(context);
+                                        },
+                                        decoration: const InputDecoration(
+                                          labelText: 'Select Category',
+                                          prefixIcon: Icon(Icons.more_vert),
+                                          suffixIcon:
+                                              Icon(Icons.arrow_drop_down),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    15.heightBox,
+                                    CoustomTextField(
+                                      textcontroller: controller.timeController,
+                                      icon: const Icon(Icons.timer),
+                                      hint: 'write your servise time',
+                                      validator: controller.validfield,
+                                    ),
+                                    15.heightBox,
+                                    CoustomTextField(
+                                      textcontroller:
+                                          controller.aboutController,
+                                      icon: const Icon(Icons.person_rounded),
+                                      hint: 'write some thing yourself',
+                                      validator: controller.validfield,
+                                    ),
+                                    15.heightBox,
+                                    CoustomTextField(
+                                      textcontroller:
+                                          controller.addressController,
+                                      icon: const Icon(Icons.home_rounded),
+                                      hint: 'write your address',
+                                      validator: controller.validfield,
+                                    ),
+                                    15.heightBox,
+                                    CoustomTextField(
+                                      textcontroller:
+                                          controller.serviceController,
+                                      icon: const Icon(Icons.type_specimen),
+                                      hint:
+                                          'write some thing about your service',
+                                      validator: controller.validfield,
+                                    ),
+                                    5.heightBox,
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                        ),
                         20.heightBox,
                         SizedBox(
                           width: context.screenWidth * .7,
@@ -71,7 +169,12 @@ class SignupView extends StatelessWidget {
                               onPressed: () async {
                                 await controller.signupUser(context);
                                 if (controller.userCredential != null) {
-                                  Get.offAll(() => const Home());
+                                  if (controller.selectedRole.value ==
+                                      'doctor') {
+                                    Get.offAll(() => const DoctorHome());
+                                  } else {
+                                    Get.offAll(() => const Home());
+                                  }
                                 }
                               },
                               child: controller.isLoading.value

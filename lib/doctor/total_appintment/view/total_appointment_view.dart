@@ -7,6 +7,7 @@ class TotalAppointment extends StatefulWidget {
   const TotalAppointment({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TotalAppointmentState createState() => _TotalAppointmentState();
 }
 
@@ -91,18 +92,37 @@ class _TotalAppointmentState extends State<TotalAppointment> {
                             !imageSnapshot.hasData ||
                             imageSnapshot.data == null ||
                             imageSnapshot.data!.isEmpty) {
-                          avatarWidget = const Center(
-                            child: Icon(
-                              Icons.account_circle,
-                              size: 50,
-                            ),
+                          avatarWidget = const CircleAvatar(
+                            radius: 25,
+                            backgroundImage:
+                                AssetImage('assets/images/doctor.png'),
                           );
                         } else {
-                          avatarWidget = Center(
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundImage:
-                                  NetworkImage(imageSnapshot.data!),
+                          avatarWidget = CircleAvatar(
+                            radius: 25,
+                            child: ClipOval(
+                              child: Image.network(
+                                imageSnapshot.data!.trim(),
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (context, child, progress) {
+                                  if (progress == null) return child;
+                                  return Image.asset(
+                                    'assets/images/doctor.png',
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/doctor.png',
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           );
                         }

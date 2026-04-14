@@ -101,9 +101,13 @@ class AppointmentDetailsController extends GetxController {
       final accessToken = await NotificationService().getAccessToken();
       await NotificationService()
           .sendNotification(accessToken, userToken, title, body);
-      print("notification send");
+      if (kDebugMode) {
+        print("notification send");
+      }
     } catch (e) {
-      print('Error sending notifications: $e');
+      if (kDebugMode) {
+        print('Error sending notifications: $e');
+      }
       //_showDialog('Error', 'Error sending notification.');
     }
   }

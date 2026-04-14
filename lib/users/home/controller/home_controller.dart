@@ -26,12 +26,24 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getDoctorList() async {
-    var doctors = FirebaseFirestore.instance
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getDoctorList() async {
+    final doctorsSnapshot = await FirebaseFirestore.instance
         .collection('doctors')
-        .orderBy('docRating', descending: false)
-        .limit(5)
+        .where('status', isEqualTo: 'approved')
         .get();
-    return doctors;
+
+    final doctors = doctorsSnapshot.docs;
+
+    // Sort by highest rating first using safe numeric parsing.
+    doctors.sort((a, b) {
+      final aRating =
+          double.tryParse((a.data()['docRating'] ?? '0').toString()) ?? 0;
+      final bRating =
+          double.tryParse((b.data()['docRating'] ?? '0').toString()) ?? 0;
+      return bRating.compareTo(aRating);
+    });
+
+    return doctors.take(5).toList();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:s_medi/doctor/all%20reviews/all_reviews.dart';
 import 'package:s_medi/general/consts/consts.dart';
@@ -51,7 +52,9 @@ class _DoctorHomeState extends State<DoctorHome> {
 
     // Handle foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Received a foreground message: ${message.notification?.title}');
+      if (kDebugMode) {
+        print('Received a foreground message: ${message.notification?.title}');
+      }
       _showNotification(
         message.notification?.title,
         message.notification?.body,
@@ -61,7 +64,10 @@ class _DoctorHomeState extends State<DoctorHome> {
 
     // Handle background and terminated message taps
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Notification clicked! Opened app from background or terminated.');
+      if (kDebugMode) {
+        print(
+            'Notification clicked! Opened app from background or terminated.');
+      }
       _navigateToDetails(message);
     });
 
@@ -158,7 +164,9 @@ class _DoctorHomeState extends State<DoctorHome> {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
 
     if (uid == null) {
-      print("User is not authenticated");
+      if (kDebugMode) {
+        print("User is not authenticated");
+      }
       return;
     }
 
@@ -177,20 +185,30 @@ class _DoctorHomeState extends State<DoctorHome> {
         if (currentDeviceToken == null || currentDeviceToken.isEmpty) {
           // If deviceToken is empty or null, update with the new token
           await doctorRef.update({'deviceToken': token});
-          print("Token updated: $token");
+          if (kDebugMode) {
+            print("Token updated: $token");
+          }
         } else if (currentDeviceToken == token) {
           // If the token is the same, do nothing
-          print("Token is already up-to-date");
+          if (kDebugMode) {
+            print("Token is already up-to-date");
+          }
         } else {
           // If the token is different, update it
           await doctorRef.update({'deviceToken': token});
-          print("Token updated: $token");
+          if (kDebugMode) {
+            print("Token updated: $token");
+          }
         }
       } else {
-        print("Doctor document does not exist");
+        if (kDebugMode) {
+          print("Doctor document does not exist");
+        }
       }
     } catch (e) {
-      print("Failed to update token: $e");
+      if (kDebugMode) {
+        print("Failed to update token: $e");
+      }
     }
   }
 

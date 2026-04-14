@@ -1,13 +1,58 @@
 import 'package:s_medi/general/consts/consts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
 class SignupController extends GetxController {
   var nameController = TextEditingController();
+  var phoneController = TextEditingController();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+  var categoryController = TextEditingController();
+  var timeController = TextEditingController();
+  var aboutController = TextEditingController();
+  var addressController = TextEditingController();
+  var serviceController = TextEditingController();
   UserCredential? userCredential;
   var isLoading = false.obs;
+  RxString selectedRole = 'user'.obs;
+  RxString selectedCategory = 'Body'.obs;
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
+  void setRole(String? role) {
+    if (role == null) return;
+    selectedRole.value = role;
+  }
+
+  void showDropdownMenu(BuildContext context) {
+    final List<PopupMenuEntry<String>> items = [
+      const PopupMenuItem(value: 'Body', child: Text('Body')),
+      const PopupMenuItem(value: 'Ear', child: Text('Ear')),
+      const PopupMenuItem(value: 'Liver', child: Text('Liver')),
+      const PopupMenuItem(value: 'Lungs', child: Text('Lungs')),
+      const PopupMenuItem(value: 'Heart', child: Text('Heart')),
+      const PopupMenuItem(value: 'Kidny', child: Text('Kidny')),
+      const PopupMenuItem(value: 'Eye', child: Text('Eye')),
+      const PopupMenuItem(value: 'Stomac', child: Text('Stomac')),
+      const PopupMenuItem(value: 'Tooth', child: Text('Tooth')),
+    ];
+
+    showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Rect.fromPoints(
+          Offset.zero,
+          Offset.zero,
+        ),
+        Offset.zero & MediaQuery.of(context).size,
+      ),
+      items: items,
+    ).then((value) {
+      if (value != null) {
+        selectedCategory.value = value;
+        categoryController.text = value;
+      }
+    });
+  }
 
   signupUser(context) async {
     if (formkey.currentState!.validate()) {
@@ -19,17 +64,42 @@ class SignupController extends GetxController {
           password: passwordController.text,
         );
         if (userCredential != null) {
-          var store = FirebaseFirestore.instance
-              .collection('users')
-              .doc(userCredential!.user!.uid);
-          await store.set({
-            'uid': userCredential!.user!.uid,
-            'fullname': nameController.text,
-            'password': passwordController.text,
-            'email': emailController.text,
-            'deviceToken': '',
-            'role': 'user',
-          });
+          if (selectedRole.value == 'doctor') {
+            var doctorStore = FirebaseFirestore.instance
+                .collection('doctors')
+                .doc(userCredential!.user!.uid);
+            await doctorStore.set({
+              'docId': userCredential!.user!.uid,
+              'docName': nameController.text,
+              'docPassword': passwordController.text,
+              'docEmail': emailController.text,
+              'docAbout': aboutController.text,
+              'docAddress': addressController.text,
+              'docCategory': categoryController.text,
+              'docPhone': phoneController.text,
+              'docRating': '0',
+              'docService': serviceController.text,
+              'docTimeing': timeController.text,
+              'deviceToken': "",
+              'status': "approved",
+              'role': "doctor",
+            });
+          } else {
+            var userStore = FirebaseFirestore.instance
+                .collection('users')
+                .doc(userCredential!.user!.uid);
+            await userStore.set({
+              'uid': userCredential!.user!.uid,
+              'fullname': nameController.text,
+              'password': passwordController.text,
+              'email': emailController.text,
+              'deviceToken': '',
+              'role': 'user',
+            });
+          }
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('currentUserType', selectedRole.value);
           VxToast.show(context, msg: "Signup Sucessfull");
         }
         isLoading(false);
@@ -51,6 +121,8 @@ class SignupController extends GetxController {
 
   signout() async {
     await FirebaseAuth.instance.signOut();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('currentUserType');
   }
 
   //vlidateemail
@@ -100,6 +172,17 @@ class SignupController extends GetxController {
     RegExp emailRefExp = RegExp(r'^.{5,}$');
     if (!emailRefExp.hasMatch(value)) {
       return 'Password enter a valid name';
+    }
+    return null;
+  }
+
+  String? validfield(value) {
+    if (value!.isEmpty) {
+      return 'please fil this document';
+    }
+    RegExp emailRefExp = RegExp(r'^.{2,}$');
+    if (!emailRefExp.hasMatch(value)) {
+      return 'please fil this document';
     }
     return null;
   }

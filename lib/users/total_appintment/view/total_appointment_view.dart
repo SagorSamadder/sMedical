@@ -69,7 +69,7 @@ class TotalAppointment extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 10),
                         height: 110,
                         decoration: BoxDecoration(
-                          color: AppColors.primeryColor.withOpacity(0.85),
+                          color: AppColors.primeryColor.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Padding(

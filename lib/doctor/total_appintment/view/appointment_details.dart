@@ -17,10 +17,11 @@ class AppointmentDetails extends StatelessWidget {
       appointmentId,
     ));
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         Get.back(result: 'updated');
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -42,7 +43,7 @@ class AppointmentDetails extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withValues(alpha: 0.2),
                         spreadRadius: 5,
                         blurRadius: 10,
                         offset: const Offset(0, 3),

@@ -1,10 +1,8 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:s_medi/doctor/auth/view/login_page.dart';
 import 'package:s_medi/doctor/widgets/coustom_iconbutton.dart';
 import 'package:s_medi/general/consts/consts.dart';
 
-
-import '../../auth/controller/signup_controller.dart';
+import 'package:s_medi/auth/auth/controller/signup_controller.dart';
 import '../controller/profile_controller.dart';
 
 class SettingsView extends StatelessWidget {
@@ -35,17 +33,30 @@ class SettingsView extends StatelessWidget {
                             width: 200,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                image: controller.profileImageUrl.value.isEmpty
-                                    ? AssetImage(
-                                        AppAssets.imgLogin,
-                                      )
-                                    : NetworkImage(
-                                        controller.profileImageUrl.value,
-                                      ),
-                                fit: BoxFit.cover,
-                              ),
                             ),
+                            clipBehavior: Clip.antiAlias,
+                            child: controller.profileImageUrl.value.isEmpty
+                                ? Image.asset(
+                                    'assets/images/doctor.png',
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.network(
+                                    controller.profileImageUrl.value.trim(),
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (context, child, progress) {
+                                      if (progress == null) return child;
+                                      return Image.asset(
+                                        'assets/images/doctor.png',
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Image.asset(
+                                      'assets/images/doctor.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                           ),
                           Positioned(
                             bottom: 0,
@@ -91,7 +102,7 @@ class SettingsView extends StatelessWidget {
                       const Divider(),
                       10.heightBox,
                       CoustomIconButton(
-                        color: Colors.black.withOpacity(.4),
+                        color: Colors.black.withValues(alpha: .4),
                         onTap: () {},
                         title: "Terms & Condition",
                         icon: const Icon(
@@ -102,9 +113,8 @@ class SettingsView extends StatelessWidget {
                       10.heightBox,
                       CoustomIconButton(
                         color: Colors.red,
-                        onTap: () {
-                          SignupController().signout();
-                          Get.offAll(() => const LoginView());
+                        onTap: () async {
+                          await SignupController().signout();
                         },
                         title: "Logout",
                         icon: const Icon(

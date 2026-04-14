@@ -60,6 +60,7 @@ class AllReviewsScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               var review = reviews[index]['review'];
               var user = reviews[index]['user'];
+              final userImage = (user['image'] ?? '').toString();
 
               return Padding(
                 padding:
@@ -70,16 +71,44 @@ class AllReviewsScreen extends StatelessWidget {
                   ),
                   elevation: 4,
                   child: ListTile(
-                    contentPadding: EdgeInsets.all(10),
+                    contentPadding: const EdgeInsets.all(10),
                     leading: CircleAvatar(
-                      backgroundImage: user['image'] == ""
-                          ? AssetImage(AppAssets.imgDoctor)
-                          : NetworkImage(user['image']) as ImageProvider,
                       radius: 30,
+                      child: ClipOval(
+                        child: userImage.isEmpty
+                            ? Image.asset(
+                                'assets/images/doctor.png',
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                userImage.trim(),
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (context, child, progress) {
+                                  if (progress == null) return child;
+                                  return Image.asset(
+                                    'assets/images/doctor.png',
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/doctor.png',
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                      ),
                     ),
                     title: Text(
                       "Reviewer :${user['fullname']}",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -93,10 +122,10 @@ class AllReviewsScreen extends StatelessWidget {
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.star, color: Colors.amber),
+                        const Icon(Icons.star, color: Colors.amber),
                         Text(
                           review['rating'].toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -114,11 +143,42 @@ class AllReviewsScreen extends StatelessWidget {
                             title: Row(
                               children: [
                                 CircleAvatar(
-                                  backgroundImage: user['image'] == ""
-                                      ? AssetImage(AppAssets.imgDoctor)
-                                      : NetworkImage(user['image'])
-                                          as ImageProvider,
                                   radius: 25,
+                                  child: ClipOval(
+                                    child: userImage.isEmpty
+                                        ? Image.asset(
+                                            'assets/images/doctor.png',
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.network(
+                                            userImage.trim(),
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder:
+                                                (context, child, progress) {
+                                              if (progress == null) {
+                                                return child;
+                                              }
+                                              return Image.asset(
+                                                'assets/images/doctor.png',
+                                                width: 50,
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Image.asset(
+                                              'assets/images/doctor.png',
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                  ),
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(

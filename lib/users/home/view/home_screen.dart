@@ -191,10 +191,15 @@ class HomeScreen extends StatelessWidget {
                         .make(),
                   ),
                   10.heightBox,
-                  FutureBuilder<QuerySnapshot>(
+                  FutureBuilder<
+                      List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
                     future: controller.getDoctorList(),
                     builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                        AsyncSnapshot<
+                                List<
+                                    QueryDocumentSnapshot<
+                                        Map<String, dynamic>>>>
+                            snapshot) {
                       if (!snapshot.hasData) {
                         // Use a shimmer effect while loading
                         return SizedBox(
@@ -248,7 +253,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         );
                       } else {
-                        var data = snapshot.data?.docs;
+                        var data = snapshot.data;
                         return SizedBox(
                           height: 195,
                           child: ListView.builder(
@@ -256,6 +261,16 @@ class HomeScreen extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             itemCount: data?.length ?? 0,
                             itemBuilder: (BuildContext context, int index) {
+                              final doctorData = data![index].data();
+                              final imageUrl =
+                                  (doctorData['image'] ?? '').toString();
+                              final docName =
+                                  (doctorData['docName'] ?? 'Unknown')
+                                      .toString();
+                              final docCategory =
+                                  (doctorData['docCategory'] ?? 'Unknown')
+                                      .toString();
+
                               return GestureDetector(
                                 onTap: () {
                                   Get.to(() => DoctorProfile(
@@ -276,18 +291,38 @@ class HomeScreen extends StatelessWidget {
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
                                         child: Container(
-                                          child: data![index]["image"] == ""
+                                          child: imageUrl.isEmpty
                                               ? Image.asset(
-                                                  AppAssets.imgLogin,
+                                                  'assets/images/doctor.png',
                                                   height: 130,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
                                                 )
                                               : Image.network(
-                                                  data[index]["image"],
+                                                  imageUrl.trim(),
                                                   height: 130,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
+                                                  loadingBuilder: (context,
+                                                      child, progress) {
+                                                    if (progress == null) {
+                                                      return child;
+                                                    }
+                                                    return Image.asset(
+                                                      'assets/images/doctor.png',
+                                                      height: 130,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.cover,
+                                                    );
+                                                  },
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      Image.asset(
+                                                    'assets/images/doctor.png',
+                                                    height: 130,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                         ),
                                       ),
@@ -297,16 +332,14 @@ class HomeScreen extends StatelessWidget {
                                           horizontal: 10,
                                         ),
                                         child: Text(
-                                          data[index]['docName'],
+                                          docName,
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      data[index]['docCategory']
-                                          .toString()
-                                          .text
+                                      docCategory.text
                                           .size(AppFontSize.size12)
                                           .make(),
                                     ],
@@ -340,7 +373,7 @@ class HomeScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(.4),
+                          color: Colors.green.withValues(alpha: .4),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         height: 110,
@@ -358,7 +391,7 @@ class HomeScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(.4),
+                          color: Colors.green.withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         height: 110,
@@ -376,7 +409,7 @@ class HomeScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(.4),
+                          color: Colors.green.withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         height: 110,
@@ -394,7 +427,7 @@ class HomeScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(.4),
+                          color: Colors.green.withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         height: 110,
