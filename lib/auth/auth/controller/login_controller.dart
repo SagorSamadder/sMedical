@@ -1,4 +1,6 @@
 import 'package:s_medi/general/consts/consts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:s_medi/doctor/home/view/doctor_home.dart';
 import 'package:s_medi/users/home/view/home.dart';
 
 class LoginController extends GetxController {
@@ -24,20 +26,31 @@ class LoginController extends GetxController {
               .doc(currentUserId)
               .get();
 
-          if (!userDoc.exists) {
-            isLoading(false);
-            Get.snackbar("Login failed", "No user account found.",
-                snackPosition: SnackPosition.TOP);
-            return;
-          }
-          if (userDoc['role'] == 'user') {
+          if (userDoc.exists && userDoc['role'] == 'user') {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('currentUserType', 'user');
             isLoading(false);
             Get.snackbar("Success", "Login Successful",
                 snackPosition: SnackPosition.TOP);
             Get.offAll(const Home());
+            return;
+          }
+
+          DocumentSnapshot doctorDoc = await FirebaseFirestore.instance
+              .collection('doctors')
+              .doc(currentUserId)
+              .get();
+
+          if (doctorDoc.exists && doctorDoc['role'] == 'doctor') {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('currentUserType', 'doctor');
+            isLoading(false);
+            Get.snackbar("Success", "Login Successful",
+                snackPosition: SnackPosition.TOP);
+            Get.offAll(() => const DoctorHome());
           } else {
             isLoading(false);
-            Get.snackbar("Login failed", "You are not authorized.",
+            Get.snackbar("Login failed", "No account found.",
                 snackPosition: SnackPosition.TOP);
           }
         }

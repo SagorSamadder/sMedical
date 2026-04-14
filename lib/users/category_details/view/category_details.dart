@@ -61,15 +61,28 @@ class CategoryDetailsView extends StatelessWidget {
                             color: AppColors.greenColor,
                             child: data[index]['image'] == ''
                                 ? Image.asset(
-                                    AppAssets.imgLogin,
+                                    'assets/images/doctor.png',
                                     width: double.infinity,
                                     fit: BoxFit.cover,
                                   )
                                 : Image.network(
-                                    data[index]['image'],
+                                    data[index]['image'].toString().trim(),
                                     height: 130,
                                     width: 130,
                                     fit: BoxFit.cover,
+                                    loadingBuilder: (context, child, progress) {
+                                      if (progress == null) return child;
+                                      return Image.asset(
+                                        'assets/images/doctor.png',
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Image.asset(
+                                      'assets/images/doctor.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                           ),
                         ),

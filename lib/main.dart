@@ -2,8 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:s_medi/firebase_options.dart';
 import 'package:s_medi/general/consts/consts.dart';
 
-import 'users/auth/view/login_page.dart';
-import 'users/home/view/home.dart';
+import 'auth/auth/view/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,24 +20,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var isLogin = false;
-  var auth = FirebaseAuth.instance;
-  chekIfLogin() async {
-    auth.authStateChanges().listen((User? user) {
-      if (user != null && mounted) {
-        setState(() {
-          isLogin = true;
-        });
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    chekIfLogin();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -49,7 +30,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff4B2EAD)),
         useMaterial3: true,
       ),
-      home: isLogin ? const Home() : const LoginView(),
+      home: const SplashScreen(),
     );
   }
 }

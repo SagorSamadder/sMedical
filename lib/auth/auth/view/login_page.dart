@@ -1,17 +1,18 @@
 import 'package:s_medi/general/consts/consts.dart';
+import '../../../users/widgets/coustom_textfield.dart';
+import '../controller/login_controller.dart';
+import '../reset_password/reset_password.dart';
+import '../../../users/widgets/loading_indicator.dart';
+import 'signup_page.dart';
 
-import '../../home/view/home.dart';
-import '../../widgets/coustom_textfield.dart';
-import '../../widgets/loading_indicator.dart';
-import '../controller/signup_controller.dart';
-
-class SignupView extends StatelessWidget {
-  const SignupView({super.key});
+class LoginView extends StatelessWidget {
+  const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.put(SignupController());
+    var controller = Get.put(LoginController());
     return Scaffold(
+      backgroundColor: const Color(0xfff8f8f6),
       body: Container(
         margin: const EdgeInsets.only(top: 35),
         padding: const EdgeInsets.all(8),
@@ -20,11 +21,13 @@ class SignupView extends StatelessWidget {
             Column(
               children: [
                 Image.asset(
-                  AppAssets.imgWelcome,
+                  AppAssets.imgLogin,
                   width: context.screenHeight * .23,
                 ),
+                5.heightBox,
+                AppString.welcome.text.size(AppFontSize.size18).bold.make(),
                 8.heightBox,
-                AppString.signupNow.text
+                AppString.weAreExcuited.text
                     .size(AppFontSize.size18)
                     .semiBold
                     .make()
@@ -39,24 +42,26 @@ class SignupView extends StatelessWidget {
                     child: Column(
                       children: [
                         CoustomTextField(
-                          textcontroller: controller.nameController,
-                          hint: AppString.fullName,
-                          icon: const Icon(Icons.person),
-                          validator: controller.validname,
-                        ),
-                        15.heightBox,
-                        CoustomTextField(
+                          validator: controller.validateemail,
                           textcontroller: controller.emailController,
                           icon: const Icon(Icons.email_outlined),
                           hint: AppString.emailHint,
-                          validator: controller.validateemail,
                         ),
-                        15.heightBox,
+                        18.heightBox,
                         CoustomTextField(
+                          validator: controller.validpass,
                           textcontroller: controller.passwordController,
                           icon: const Icon(Icons.key),
                           hint: AppString.passwordHint,
-                          validator: controller.validpass,
+                        ),
+                        20.heightBox,
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                              onTap: () {
+                                Get.to(() => const PasswordResetPage());
+                              },
+                              child: "Forget Password ?".text.make()),
                         ),
                         20.heightBox,
                         SizedBox(
@@ -69,14 +74,11 @@ class SignupView extends StatelessWidget {
                                 shape: const StadiumBorder(),
                               ),
                               onPressed: () async {
-                                await controller.signupUser(context);
-                                if (controller.userCredential != null) {
-                                  Get.offAll(() => const Home());
-                                }
+                                controller.loginUser(context);
                               },
                               child: controller.isLoading.value
                                   ? const LoadingIndicator()
-                                  : AppString.signup.text.white.make(),
+                                  : AppString.login.text.white.make(),
                             ),
                           ),
                         ),
@@ -84,10 +86,13 @@ class SignupView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            AppString.alreadyHaveAccount.text.make(),
+                            AppString.dontHaveAccount.text.make(),
                             8.widthBox,
-                            AppString.login.text.make().onTap(() {
-                              Get.back();
+                            AppString.signup.text
+                                .color(AppColors.primeryColor)
+                                .make()
+                                .onTap(() {
+                              Get.to(() => const SignupView());
                             }),
                           ],
                         )

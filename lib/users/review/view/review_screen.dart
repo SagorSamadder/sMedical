@@ -26,39 +26,31 @@ class ReviewPage extends StatelessWidget {
                 'How was the behavior?',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              Column(
-                children: <Widget>[
-                  Obx(() => ListTile(
-                        title: const Text('Good'),
-                        leading: Radio(
-                          value: 'Good',
-                          groupValue: reviewController.selectedBehavior.value,
-                          onChanged: (value) {
-                            reviewController.updateBehavior(value!);
-                          },
-                        ),
-                      )),
-                  Obx(() => ListTile(
-                        title: const Text('Average'),
-                        leading: Radio(
-                          value: 'Average',
-                          groupValue: reviewController.selectedBehavior.value,
-                          onChanged: (value) {
-                            reviewController.updateBehavior(value!);
-                          },
-                        ),
-                      )),
-                  Obx(() => ListTile(
-                        title: const Text('Bad'),
-                        leading: Radio(
-                          value: 'Bad',
-                          groupValue: reviewController.selectedBehavior.value,
-                          onChanged: (value) {
-                            reviewController.updateBehavior(value!);
-                          },
-                        ),
-                      )),
-                ],
+              Obx(
+                () => RadioGroup<String>(
+                  groupValue: reviewController.selectedBehavior.value,
+                  onChanged: (value) {
+                    if (value != null) {
+                      reviewController.updateBehavior(value);
+                    }
+                  },
+                  child: const Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text('Good'),
+                        leading: Radio<String>(value: 'Good'),
+                      ),
+                      ListTile(
+                        title: Text('Average'),
+                        leading: Radio<String>(value: 'Average'),
+                      ),
+                      ListTile(
+                        title: Text('Bad'),
+                        leading: Radio<String>(value: 'Bad'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               // Comment Section
