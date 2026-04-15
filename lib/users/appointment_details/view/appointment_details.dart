@@ -5,11 +5,21 @@ class Appointmentdetails extends StatelessWidget {
   final DocumentSnapshot doc;
   const Appointmentdetails({super.key, required this.doc});
 
+  String _readString(String key, [String fallback = '']) {
+    try {
+      final value = doc.data() as Map<String, dynamic>?;
+      return (value?[key] ?? fallback).toString();
+    } catch (_) {
+      return fallback;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final status = (doc['status'] ?? 'unknown').toString();
+    final status = _readString('status', 'unknown');
     final isCompleted = status.toLowerCase() == "complete";
-    final reviewPending = (doc['review'] ?? "false").toString() == "false";
+    final reviewPending = _readString('review', 'false') == "false";
+    final doctorNote = _readString('note', '').trim();
 
     return Scaffold(
       backgroundColor: const Color(0xffF4F6FB),
@@ -129,6 +139,10 @@ class Appointmentdetails extends StatelessWidget {
                   _labelValue("Patient's Phone", doc['appMobile'].toString()),
                   10.heightBox,
                   _labelValue('Problems', doc['appMsg'].toString()),
+                  if (isCompleted && doctorNote.isNotEmpty) ...[
+                    10.heightBox,
+                    _labelValue('Doctor Note', doctorNote),
+                  ],
                   18.heightBox,
                   Row(
                     children: [
