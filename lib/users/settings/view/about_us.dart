@@ -117,9 +117,9 @@ class AboutUs extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  SelectableText(
+                  const SelectableText(
                     linkedInUrl,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black87,
                     ),
                   ),
