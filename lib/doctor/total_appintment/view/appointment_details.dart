@@ -25,10 +25,11 @@ class AppointmentDetails extends StatelessWidget {
       ),
     );
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         Get.back(result: 'updated');
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(

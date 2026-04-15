@@ -166,14 +166,14 @@ class _TotalAppointmentState extends State<TotalAppointment> {
                                               TextSpan(
                                                 text: _limitCharacters(
                                                     "Patient: $appName", 20),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w600,
                                                   color: Colors.black,
                                                 ),
                                               ),
-                                              WidgetSpan(
-                                                child: const SizedBox(width: 8),
+                                              const WidgetSpan(
+                                                child: SizedBox(width: 8),
                                               ),
                                               const WidgetSpan(
                                                 child: Icon(
@@ -223,7 +223,7 @@ class _TotalAppointmentState extends State<TotalAppointment> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 12, vertical: 6),
                                         decoration: BoxDecoration(
                                           color: _getStatusColor(status),
@@ -232,7 +232,7 @@ class _TotalAppointmentState extends State<TotalAppointment> {
                                         ),
                                         child: Text(
                                           status.capitalizeFirst!,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 12,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
