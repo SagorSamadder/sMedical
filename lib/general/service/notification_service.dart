@@ -6,6 +6,26 @@ import 'package:jose/jose.dart';
 import 'dart:developer' as devtools show log;
 
 class NotificationService {
+  Future<bool> canSendNotifications() async {
+    try {
+      final jsonCredentials =
+          await rootBundle.loadString('data/smedical-e2870-0ff218b7921a.json');
+      final decoded = jsonDecode(jsonCredentials);
+      if (decoded is! Map<String, dynamic>) return false;
+
+      final privateKey = (decoded['private_key'] ?? '').toString().trim();
+      if (privateKey.isEmpty) return false;
+
+      final normalized = privateKey.replaceAll(r'\n', '\n');
+      final hasPemMarkers =
+          normalized.contains('-----BEGIN PRIVATE KEY-----') &&
+              normalized.contains('-----END PRIVATE KEY-----');
+      return hasPemMarkers;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<String> getAccessToken() async {
     final jsonCredentials =
         await rootBundle.loadString('data/smedical-e2870-0ff218b7921a.json');
@@ -89,7 +109,11 @@ class NotificationService {
     // ignore: unused_local_variable
     final String unsignedToken = '$encodedHeader.$encodedClaims';
 
-    final privateKey = JsonWebKey.fromPem(creds.privateKey);
+    // Some service-account JSON files store newlines as escaped sequences.
+    // Normalize before parsing as PEM.
+    final normalizedPrivateKey =
+        creds.privateKey.replaceAll(r'\n', '\n').trim();
+    final privateKey = JsonWebKey.fromPem(normalizedPrivateKey);
 
     final signer = JsonWebSignatureBuilder()
       ..jsonContent = jwtClaims
