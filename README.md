@@ -80,7 +80,7 @@ Some others
 
 ![other](https://github.com/sagor1414/sMedical/blob/main/assets/images/Screenshot_1701920115.png?raw=true)
 ## License
-[SagorSamadder](https://github.com/SagorSamadder)
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 ## 🚀 About Me
 I'm a full stack developer...
 
